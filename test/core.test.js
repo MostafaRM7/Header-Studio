@@ -32,6 +32,19 @@ test('only fresh default state requests initial active-site scoping', () => {
   assert.equal(pending.initialScopePending, true);
 });
 
+test('only valid enabled header rows count as active', () => {
+  const profile = core.createProfile('Scope warning');
+  assert.equal(core.hasActiveHeaders(profile), false);
+
+  profile.requestHeaders.push({ enabled: true, name: '', value: 'draft' });
+  profile.requestHeaders.push({ enabled: true, name: 'Invalid Header', value: 'draft' });
+  profile.responseHeaders.push({ enabled: false, name: 'X-Disabled', value: 'draft' });
+  assert.equal(core.hasActiveHeaders(profile), false);
+
+  profile.responseHeaders.push({ enabled: true, name: 'X-Active', value: '' });
+  assert.equal(core.hasActiveHeaders(profile), true);
+});
+
 test('imports a legacy ModHeader profile and preserves comments', () => {
   const legacy = JSON.stringify({
     title: 'Legacy API',

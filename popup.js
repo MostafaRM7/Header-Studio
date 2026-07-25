@@ -448,8 +448,7 @@ function scopeShortLabel(scope) {
 }
 
 function updateScopeWarning(profile, scope = effectiveScope(profile)) {
-  const hasActiveHeaders = [...profile.requestHeaders, ...profile.responseHeaders]
-    .some((header) => header.enabled && header.name.trim());
+  const hasActiveHeaders = core.hasActiveHeaders(profile);
   elements.scopeWarning.hidden = !(state.enabled && hasActiveHeaders && scope.siteWide);
   if (elements.scopeWarning.hidden) return;
   elements.scopeWarning.textContent = scope.kind === 'bypassed'
@@ -460,15 +459,27 @@ function updateScopeWarning(profile, scope = effectiveScope(profile)) {
 }
 
 function updateHeaderScopeSummary(profile, scope = effectiveScope(profile)) {
+  const hasActiveHeaders = core.hasActiveHeaders(profile);
   elements.headerScopeSummary.textContent = state.enabled
     ? scope.topText
     : `Rules off · ${scopeShortLabel(scope)}`;
-  elements.headerScopeSummary.classList.toggle('all-sites', state.enabled && scope.siteWide);
+  elements.headerScopeSummary.classList.toggle(
+    'all-sites',
+    state.enabled && hasActiveHeaders && scope.siteWide
+  );
   elements.headerScopeSummary.title = !state.enabled
     ? 'Rules are off. Open filters.'
+    : !hasActiveHeaders
+    ? 'No active headers. Open filters.'
     : scope.siteWide
     ? 'This profile can affect every HTTP and HTTPS site. Open filters.'
     : 'Open filters';
+}
+
+function updateHeaderScopeIndicators(profile) {
+  const scope = effectiveScope(profile);
+  updateHeaderScopeSummary(profile, scope);
+  updateScopeWarning(profile, scope);
 }
 
 async function updateScopeSummary(profile) {
@@ -580,7 +591,7 @@ function renderHeaders(area) {
     enabled.addEventListener('change', () => {
       header.enabled = enabled.checked;
       row.classList.toggle('disabled-row', !header.enabled);
-      updateScopeWarning(profile);
+      updateHeaderScopeIndicators(profile);
       updateDuplicateHeaderWarnings(headers, list);
       changed();
     });
@@ -598,7 +609,7 @@ function renderHeaders(area) {
     name.addEventListener('input', () => {
       header.name = name.value;
       validateName();
-      updateScopeWarning(profile);
+      updateHeaderScopeIndicators(profile);
       updateDuplicateHeaderWarnings(headers, list);
       changed();
     });
