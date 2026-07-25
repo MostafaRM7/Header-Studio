@@ -4,6 +4,16 @@ Header Studio is a focused Chrome extension for modifying request and response h
 
 It is a clean Manifest V3 implementation designed for local sideloading. The extension makes no network requests of its own, includes no analytics or third-party dependencies, and stores its configuration in `chrome.storage.local`.
 
+## Screenshots
+
+### Header editing
+
+![Header Studio in dark mode showing request and response header profiles](assets/screenshots/overview-dark.png)
+
+### URL and resource filtering
+
+![Header Studio in light mode showing URL and resource-type filters](assets/screenshots/filters-light.png)
+
 ## Features
 
 - Modify request and response headers with Chrome's Declarative Net Request API.
