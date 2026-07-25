@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Header Studio</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-main">
+      <div class="brand">
+        <img class="brand-logo" src="assets/icon-48.png" alt="">
+        <h1>Header Studio</h1>
+      </div>
+      <div class="header-profile-bar">
+        <label class="profile-picker">
+          <span class="sr-only">Profile</span>
+          <select id="profile-select" aria-label="Select profile"></select>
+        </label>
+        <button id="header-scope-summary" class="header-scope-summary" type="button" title="Open filters">
+          Applies to: All sites
+        </button>
+        <button id="profile-add" class="topbar-button" type="button" aria-label="Create a profile">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+          <span>New</span>
+        </button>
+        <details id="more-menu" class="more-menu">
+          <summary aria-label="More actions" title="More actions">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="10" r="1.35"/><circle cx="10" cy="10" r="1.35"/><circle cx="16" cy="10" r="1.35"/></svg>
+          </summary>
+          <div class="menu-panel">
+            <button id="profile-rename" type="button">Rename profile</button>
+            <button id="profile-delete" class="danger" type="button">Delete profile</button>
+            <span class="menu-separator"></span>
+            <button id="import-open" type="button">Import backup</button>
+            <button id="export" type="button">Export backup</button>
+            <label class="menu-theme">
+              <span>Theme</span>
+              <select id="theme" aria-label="Color theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </label>
+          </div>
+        </details>
+      </div>
+      <div class="topbar-actions">
+        <label class="power-control">
+          <input id="enabled" type="checkbox" role="switch">
+          <span class="switch-track" aria-hidden="true"></span>
+          <span>Rules <strong id="power-label">On</strong></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="request-card" class="card" aria-labelledby="request-heading">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Outgoing</span>
+          <h2 id="request-heading">Request headers <span id="request-count" class="section-count">0</span></h2>
+        </div>
+        <div class="section-actions">
+          <button id="request-add" class="button secondary" type="button">Add header</button>
+          <button id="request-toggle" class="section-toggle" type="button" aria-expanded="true" aria-controls="request-body" aria-label="Collapse request headers" title="Collapse request headers">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="request-body" class="section-body">
+        <div id="request-labels" class="header-labels" aria-hidden="true">
+          <span></span><span></span><span>Name</span><span>Value</span><span>Comment</span><span></span>
+        </div>
+        <div id="request-list" class="row-list"></div>
+        <p id="request-empty" class="empty-state">No request headers in this profile.</p>
+      </div>
+    </section>
+
+    <section id="response-card" class="card" aria-labelledby="response-heading">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Incoming</span>
+          <h2 id="response-heading">Response headers <span id="response-count" class="section-count">0</span></h2>
+        </div>
+        <div class="section-actions">
+          <button id="response-add" class="button secondary" type="button">Add header</button>
+          <button id="response-toggle" class="section-toggle" type="button" aria-expanded="true" aria-controls="response-body" aria-label="Collapse response headers" title="Collapse response headers">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="response-body" class="section-body">
+        <div id="response-labels" class="header-labels" aria-hidden="true">
+          <span></span><span></span><span>Name</span><span>Value</span><span>Comment</span><span></span>
+        </div>
+        <div id="response-list" class="row-list"></div>
+        <p id="response-empty" class="empty-state">No response headers in this profile.</p>
+      </div>
+    </section>
+
+    <section id="scope-card" class="card scope-card" aria-labelledby="scope-heading">
+      <div class="section-heading scope-heading-row">
+        <div>
+          <span class="eyebrow">Where rules apply</span>
+          <h2 id="scope-heading">Filters <span id="filter-count" class="section-count">0</span></h2>
+        </div>
+        <div class="section-actions">
+          <label class="scope-power-control" title="Turn off to bypass URL and resource filters">
+            <input id="filters-enabled" type="checkbox" role="switch">
+            <span class="mini-switch-track" aria-hidden="true"></span>
+            <span>Filters <strong id="filters-power-label">enforced</strong></span>
+          </label>
+          <button id="scope-toggle" class="section-toggle" type="button" aria-expanded="true" aria-controls="scope-body" aria-label="Collapse filters" title="Collapse filters">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="scope-body" class="section-body">
+        <div class="scope-summary" role="status">
+          <div>
+            <strong id="scope-summary-title">Applying to: All websites</strong>
+            <span id="scope-summary-detail">No URL restrictions are active.</span>
+          </div>
+          <span id="scope-meta" class="scope-meta">URL rules: 0 · Resource types: All</span>
+        </div>
+        <div id="scope-warning" class="scope-warning" role="alert" hidden>
+          Active headers currently apply to every website. Add a URL rule to limit exposure.
+        </div>
+        <div class="scope-toolbar">
+          <button id="filter-add" class="button secondary" type="button">Add URL rule</button>
+          <button id="resource-filter-add" class="button secondary" type="button">Add resource filter</button>
+        </div>
+        <p id="scope-help" class="section-help">Match any URL rule and any selected resource type. Disabled rows are ignored.</p>
+        <div id="filter-list" class="row-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="undo-toast" class="undo-toast" role="status" aria-live="polite" hidden>
+    <span id="undo-message">Profile deleted</span>
+    <button id="profile-undo" type="button">Undo</button>
+  </div>
+
+  <div id="notice-toast" class="notice-toast" role="status" aria-live="polite" hidden></div>
+
+  <footer>
+    <div id="status" class="status" role="status" aria-live="polite">Loading…</div>
+    <span>Changes save automatically</span>
+  </footer>
+
+  <dialog id="import-dialog" aria-labelledby="import-title">
+    <form method="dialog" id="import-form">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Restore</span>
+          <h2 id="import-title">Import a backup</h2>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="Close import dialog">×</button>
+      </div>
+      <p>Paste JSON from this extension or an older ModHeader profile/backup. Replacing profiles first downloads a full safety backup containing existing header values.</p>
+      <label class="file-picker">
+        <span>Choose JSON file</span>
+        <input id="import-file" type="file" accept="application/json,.json,text/plain">
+      </label>
+      <textarea id="import-text" rows="4" spellcheck="false" placeholder='Paste backup JSON here'></textarea>
+      <label class="field-label" for="import-mode">Import mode</label>
+      <select id="import-mode">
+        <option value="add">Add imported profiles</option>
+        <option value="replace">Replace all profiles</option>
+      </select>
+      <p id="import-preview" class="import-preview">Choose a backup to preview it.</p>
+      <label id="replace-confirm-row" class="replace-confirm" hidden>
+        <input id="replace-confirm" type="checkbox">
+        <span>I understand this will replace every current profile.</span>
+      </label>
+      <p id="import-error" class="form-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="button secondary" value="cancel" type="submit">Cancel</button>
+        <button id="import-submit" class="button primary" type="button">Import backup</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="export-dialog" aria-labelledby="export-title">
+    <form method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Backup</span>
+          <h2 id="export-title">Export profiles</h2>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="Close export dialog">×</button>
+      </div>
+      <p class="sensitive-warning">Backups may contain sensitive header values and local notes, including authorization tokens.</p>
+      <p>A redacted backup keeps profile names, header names, filters, and settings, but replaces header values and local notes.</p>
+      <div class="dialog-actions export-actions">
+        <button class="button secondary" value="cancel" type="submit">Cancel</button>
+        <button id="export-redacted" class="button secondary" type="button">Export redacted</button>
+        <button id="export-full" class="button primary" type="button">Export full backup</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="new-profile-dialog" aria-labelledby="new-profile-title">
+    <form method="dialog" id="new-profile-form">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Profile</span>
+          <h2 id="new-profile-title">Create a profile</h2>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="Close new profile dialog">×</button>
+      </div>
+      <label class="field-label" for="new-profile-name">Profile name</label>
+      <input id="new-profile-name" maxlength="120" autocomplete="off" placeholder="Profile name">
+      <fieldset class="scope-choice">
+        <legend>Starting scope</legend>
+        <label>
+          <input id="new-scope-current" type="radio" name="new-profile-scope" value="current" checked>
+          <span><strong>Current site</strong><small id="new-scope-current-label">Detecting the active site…</small></span>
+        </label>
+        <label class="all-sites-choice">
+          <input id="new-scope-all" type="radio" name="new-profile-scope" value="all">
+          <span><strong>All sites</strong><small>Headers can be sent to every HTTP and HTTPS website.</small></span>
+        </label>
+      </fieldset>
+      <div class="dialog-actions">
+        <button class="button secondary" value="cancel" type="submit">Cancel</button>
+        <button id="new-profile-submit" class="button primary" type="button">Create profile</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="rename-dialog" aria-labelledby="rename-title">
+    <form method="dialog" id="rename-form">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Profile</span>
+          <h2 id="rename-title">Rename profile</h2>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="Close rename dialog">×</button>
+      </div>
+      <label class="field-label" for="profile-title">Profile name</label>
+      <input id="profile-title" maxlength="120" autocomplete="off" placeholder="Profile name">
+      <div class="dialog-actions">
+        <button class="button secondary" value="cancel" type="submit">Cancel</button>
+        <button id="profile-rename-save" class="button primary" type="button">Save name</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="lib/core.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

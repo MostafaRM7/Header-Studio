@@ -1,0 +1,10 @@
+{
+  "name": "header-studio-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A local-only Chrome extension for filtered request and response header modification.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check lib/core.js && node --check background.js && node --check popup.js && node --test"
+  }
+}

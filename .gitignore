@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+coverage/
+*.log
+
+# Backups may contain authorization headers and other secrets.
+*.backup.json
+header-studio-backup*.json

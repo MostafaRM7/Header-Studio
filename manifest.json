@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Header Studio",
+  "version": "1.0.0",
+  "description": "Modify request and response headers with profiles, filters, comments, and backup import.",
+  "minimum_chrome_version": "101",
+  "permissions": [
+    "activeTab",
+    "declarativeNetRequestWithHostAccess",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "action": {
+    "default_title": "Header Studio",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png"
+    }
+  }
+}
